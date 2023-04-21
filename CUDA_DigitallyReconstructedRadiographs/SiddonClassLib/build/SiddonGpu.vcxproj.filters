@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="F:\code\python\iMIA\MyDRR\CUDA_DigitallyReconstructedRadiographs\SiddonClassLib\src\SiddonLib\siddon_class.cu">
+      <Filter>Source Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="F:\code\python\iMIA\MyDRR\CUDA_DigitallyReconstructedRadiographs\SiddonClassLib\src\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="F:\code\python\iMIA\MyDRR\CUDA_DigitallyReconstructedRadiographs\SiddonClassLib\src\SiddonLib\siddon_class.cuh" />
+  </ItemGroup>
+  <ItemGroup>
+    <Object Include="F:\code\python\iMIA\MyDRR\CUDA_DigitallyReconstructedRadiographs\SiddonClassLib\build\CMakeFiles\SiddonGpu.dir\SiddonLib\$(Configuration)\SiddonGpu_generated_siddon_class.cu.obj">
+      <Filter>Object Files</Filter>
+    </Object>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Object Files">
+      <UniqueIdentifier>{F8251C60-F22B-34EF-A0AD-0FCCFDC65734}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{057E7014-E24D-3C45-9AE9-CACC02F6ED29}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

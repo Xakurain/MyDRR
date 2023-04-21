@@ -1,0 +1,26 @@
+^F:\CODE\PYTHON\IMIA\MYDRR\CUDA_DIGITALLYRECONSTRUCTEDRADIOGRAPHS\SIDDONCLASSLIB\SRC\SIDDONLIB\SIDDON_CLASS.CU
+setlocal
+cd F:\code\python\iMIA\MyDRR\CUDA_DigitallyReconstructedRadiographs\SiddonClassLib\build\CMakeFiles\SiddonGpu.dir\SiddonLib
+if %errorlevel% neq 0 goto :cmEnd
+F:
+if %errorlevel% neq 0 goto :cmEnd
+"D:\Program Files\CMake\bin\cmake.exe" -E make_directory F:/code/python/iMIA/MyDRR/CUDA_DigitallyReconstructedRadiographs/SiddonClassLib/build/CMakeFiles/SiddonGpu.dir/SiddonLib/Release
+if %errorlevel% neq 0 goto :cmEnd
+"D:\Program Files\CMake\bin\cmake.exe" -D verbose:BOOL=OFF -D "CCBIN:PATH=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools/MSVC/14.34.31933/bin/Hostx64/x64" -D build_configuration:STRING=Release -D generated_file:STRING=F:/code/python/iMIA/MyDRR/CUDA_DigitallyReconstructedRadiographs/SiddonClassLib/build/CMakeFiles/SiddonGpu.dir/SiddonLib/Release/SiddonGpu_generated_siddon_class.cu.obj -D generated_cubin_file:STRING=F:/code/python/iMIA/MyDRR/CUDA_DigitallyReconstructedRadiographs/SiddonClassLib/build/CMakeFiles/SiddonGpu.dir/SiddonLib/Release/SiddonGpu_generated_siddon_class.cu.obj.cubin.txt -P F:/code/python/iMIA/MyDRR/CUDA_DigitallyReconstructedRadiographs/SiddonClassLib/build/CMakeFiles/SiddonGpu.dir/SiddonLib/SiddonGpu_generated_siddon_class.cu.obj.Release.cmake
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+^F:\CODE\PYTHON\IMIA\MYDRR\CUDA_DIGITALLYRECONSTRUCTEDRADIOGRAPHS\SIDDONCLASSLIB\SRC\CMAKELISTS.TXT
+setlocal
+"D:\Program Files\CMake\bin\cmake.exe" -SF:/code/python/iMIA/MyDRR/CUDA_DigitallyReconstructedRadiographs/SiddonClassLib/src -BF:/code/python/iMIA/MyDRR/CUDA_DigitallyReconstructedRadiographs/SiddonClassLib/build --check-stamp-file F:/code/python/iMIA/MyDRR/CUDA_DigitallyReconstructedRadiographs/SiddonClassLib/build/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

@@ -1,0 +1,54 @@
+﻿  Building NVCC (Device) object CMakeFiles/SiddonGpu.dir/SiddonLib/Release/SiddonGpu_generated_siddon_class.cu.obj
+  siddon_class.cu
+F:\code\python\iMIA\MyDRR\CUDA_DigitallyReconstructedRadiographs\SiddonClassLib\src\SiddonLib\siddon_class.cu(628): warning #177-D: label "cleanup" was declared but never referenced
+  
+  siddon_class.cu
+F:\code\python\iMIA\MyDRR\CUDA_DigitallyReconstructedRadiographs\SiddonClassLib\src\SiddonLib\siddon_class.cu(20): warning C4305: 鈥滃垵濮嬪寲鈥? 浠庘€渄ouble鈥濆埌鈥渇loat鈥濇埅鏂?
+F:\code\python\iMIA\MyDRR\CUDA_DigitallyReconstructedRadiographs\SiddonClassLib\src\SiddonLib\siddon_class.cu(628): warning C4102: 鈥渃leanup鈥? 鏈紩鐢ㄧ殑鏍囩
+  Building Custom Rule F:/code/python/iMIA/MyDRR/CUDA_DigitallyReconstructedRadiographs/SiddonClassLib/src/CMakeLists.txt
+  CMake is re-running because F:/code/python/iMIA/MyDRR/CUDA_DigitallyReconstructedRadiographs/SiddonClassLib/build/CMakeFiles/generate.stamp is out-of-date.
+    the file 'F:/code/python/iMIA/MyDRR/CUDA_DigitallyReconstructedRadiographs/SiddonClassLib/build/CMakeFiles/SiddonGpu.dir/SiddonLib/SiddonGpu_generated_siddon_class.cu.obj.depend'
+    is newer than 'F:/code/python/iMIA/MyDRR/CUDA_DigitallyReconstructedRadiographs/SiddonClassLib/build/CMakeFiles/generate.stamp.depend'
+    result='-1'
+  -- Selecting Windows SDK version 10.0.22000.0 to target Windows 10.0.22621.
+  CMake Warning (dev) in CMakeLists.txt:
+  -- Configuring done
+    No cmake_minimum_required command is present.  A line of code such as
+  
+      cmake_minimum_required(VERSION 3.25)
+  
+    should be added at the top of the file.  The version specified may be lower
+    if you wish to support older CMake versions for this project.  For more
+    information run "cmake --help-policy CMP0000".
+  This warning is for project developers.  Use -Wno-dev to suppress it.
+  
+  CMake Warning (dev) at D:/Program Files/CMake/share/cmake-3.25/Modules/FindCUDA.cmake:1989 (add_library):
+    Policy CMP0003 should be set before this line.  Add code such as
+  
+      if(COMMAND cmake_policy)
+        cmake_policy(SET CMP0003 NEW)
+      endif(COMMAND cmake_policy)
+  
+    as early as possible but after the most recent call to
+    cmake_minimum_required or cmake_policy(VERSION).  This warning appears
+    because target "SiddonGpu" links to some libraries for which the linker
+    must search:
+  
+      cudart, cudadevrt
+  
+    and other libraries with known full path:
+  
+      D:/Program Files/NVIDIA/CUDA/v11.6/lib/x64/cudart_static.lib
+  
+    CMake is adding directories in the second list to the linker search path in
+    case they are needed to find libraries from the first list (for backwards
+    compatibility with CMake 2.4).  Set policy CMP0003 to OLD or NEW to enable
+    or disable this behavior explicitly.  Run "cmake --help-policy CMP0003" for
+    more information.
+  Call Stack (most recent call first):
+    CMakeLists.txt:8 (cuda_add_library)
+  This warning is for project developers.  Use -Wno-dev to suppress it.
+  
+  -- Generating done
+  -- Build files have been written to: F:/code/python/iMIA/MyDRR/CUDA_DigitallyReconstructedRadiographs/SiddonClassLib/build
+  SiddonGpu.vcxproj -> F:\code\python\iMIA\MyDRR\CUDA_DigitallyReconstructedRadiographs\SiddonClassLib\build\Release\SiddonGpu.lib

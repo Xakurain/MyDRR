@@ -1,0 +1,10 @@
+^F:\CODE\PYTHON\IMIA\MYDRR\CUDA_DIGITALLYRECONSTRUCTEDRADIOGRAPHS\SIDDONCLASSLIB\BUILD\CMAKEFILES\D39FD381E03DCC550C498A1BB396FE0D\GENERATE.STAMP.RULE
+setlocal
+"D:\Program Files\CMake\bin\cmake.exe" -SF:/code/python/iMIA/MyDRR/CUDA_DigitallyReconstructedRadiographs/SiddonClassLib/src -BF:/code/python/iMIA/MyDRR/CUDA_DigitallyReconstructedRadiographs/SiddonClassLib/build --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file F:/code/python/iMIA/MyDRR/CUDA_DigitallyReconstructedRadiographs/SiddonClassLib/build/SiddonGpu.sln
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

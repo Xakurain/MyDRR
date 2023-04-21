@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="PYTHON_MODULE" version="4">
+  <component name="NewModuleRootManager">
+    <content url="file://$MODULE_DIR$">
+      <excludeFolder url="file://$MODULE_DIR$/.vscode" />
+      <excludeFolder url="file://$MODULE_DIR$/CUDA_DigitallyReconstructedRadiographs/SiddonClassLib/build/.vs/SiddonGpu/FileContentIndex/merges" />
+      <excludeFolder url="file://$MODULE_DIR$/CUDA_DigitallyReconstructedRadiographs/SiddonClassLib/build/.vs/SiddonGpu/v17/ipch/AutoPCH/d8c18a7259979103" />
+      <excludeFolder url="file://$MODULE_DIR$/CUDA_DigitallyReconstructedRadiographs/SiddonClassLib/build/CMakeFiles/3.25.1/CompilerIdC/tmp" />
+      <excludeFolder url="file://$MODULE_DIR$/CUDA_DigitallyReconstructedRadiographs/SiddonClassLib/build/CMakeFiles/3.25.1/CompilerIdCXX/tmp" />
+      <excludeFolder url="file://$MODULE_DIR$/CUDA_DigitallyReconstructedRadiographs/SiddonClassLib/build/CMakeFiles/pkgRedirects" />
+      <excludeFolder url="file://$MODULE_DIR$/CUDA_DigitallyReconstructedRadiographs/SiddonPythonModule/.idea" />
+      <excludeFolder url="file://$MODULE_DIR$/CUDA_DigitallyReconstructedRadiographs/SiddonPythonModule/build" />
+      <excludeFolder url="file://$MODULE_DIR$/DigitallyReconstructedRadiographs/DRRClassLib/build" />
+      <excludeFolder url="file://$MODULE_DIR$/GUI/.pytest_cache/v" />
+      <excludeFolder url="file://$MODULE_DIR$/mobilenet/pth" />
+    </content>
+    <orderEntry type="jdk" jdkName="D:\Python\Anaconda3" jdkType="Python SDK" />
+    <orderEntry type="sourceFolder" forTests="false" />
+  </component>
+  <component name="PyDocumentationSettings">
+    <option name="format" value="PLAIN" />
+    <option name="myDocStringFormat" value="Plain" />
+  </component>
+  <component name="TestRunnerService">
+    <option name="PROJECT_TEST_RUNNER" value="py.test" />
+  </component>
+</module>
