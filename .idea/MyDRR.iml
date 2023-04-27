@@ -18,6 +18,7 @@
       <excludeFolder url="file://$MODULE_DIR$/mobilenet/result_ty" />
       <excludeFolder url="file://$MODULE_DIR$/mobilenet/result_tz" />
       <excludeFolder url="file://$MODULE_DIR$/CUDA_DigitallyReconstructedRadiographs/SiddonClassLib/lib" />
+      <excludeFolder url="file://$MODULE_DIR$/GUI/img" />
       <excludeFolder url="file://$MODULE_DIR$/test/Gimg" />
     </content>
     <orderEntry type="jdk" jdkName="D:\Python\Anaconda3" jdkType="Python SDK" />
