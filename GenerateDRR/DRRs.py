@@ -13,41 +13,45 @@ p = pyDRRGenerate(dcmfilepath, False)
 p.ReadDCM()
 # dic = {"DRRs":{"moving_image": [], "fixed_image": []}}
 
-rx = -90.
-ry = 0.
-rz = 0.
-tx = 0.
-ty = 0.
-tz = 0.
+rx = -82.5
+ry = 2.6
+rz = -3.3
+tx = -14.6
+ty = -7.5
+tz = 17.4
 sid = 400
 sx = 3
 sy = 3
 dx = 512
 dy = 512
 threshold = 0
+save_dcm_name = f'F:\\code\\python\\iMIA\\MyDRR\\test\\y_true.png'
+p.Drr1(save_dcm_name, rx, ry, rz, tx, ty, tz, sid, sx, sy, dx, dy, threshold)
 
-output_root = "F:\\dataset\\imia\\zyt303\\"
-img_num = 0
-count = 31000
-with open('F:\\code\\python\\iMIA\\MyDRR\\imagelabel_new1.json','r')  as f:
-    dic_img = json.load(f)
-    start = time.time()
-    print('start')
-    for img_num in range(31000, 35000):
-        img_num_s = f"img_{img_num}"
-        dic_img1 = dic_img[img_num_s]
-        rx = dic_img1['rx']
-        ry = dic_img1['ry']
-        rz = dic_img1['rz']
-        tx = dic_img1['tx']
-        ty = dic_img1['ty']
-        tz = dic_img1['tz']
-        save_dcm_name = f'{output_root}\\DRRs\\new_DRRs\\img_{img_num}.png'
-        p.Drr1(save_dcm_name, rx, ry, rz, tx, ty, tz, sid, sx, sy, dx, dy, threshold)
-        count += 1
-        if count % 500 == 0:
-            end = time.time()
-            print("已生成{}张图片，总用时{:.2f}s".format(count, end-start))
+
+
+# output_root = "F:\\dataset\\imia\\zyt303\\"
+# img_num = 0
+# count = 31000
+# with open('F:\\code\\python\\iMIA\\MyDRR\\imagelabel_new1.json','r')  as f:
+#     dic_img = json.load(f)
+#     start = time.time()
+#     print('start')
+#     for img_num in range(31000, 35000):
+#         img_num_s = f"img_{img_num}"
+#         dic_img1 = dic_img[img_num_s]
+#         rx = dic_img1['rx']
+#         ry = dic_img1['ry']
+#         rz = dic_img1['rz']
+#         tx = dic_img1['tx']
+#         ty = dic_img1['ty']
+#         tz = dic_img1['tz']
+#         save_dcm_name = f'{output_root}\\DRRs\\new_DRRs\\img_{img_num}.png'
+#         p.Drr1(save_dcm_name, rx, ry, rz, tx, ty, tz, sid, sx, sy, dx, dy, threshold)
+#         count += 1
+#         if count % 500 == 0:
+#             end = time.time()
+#             print("已生成{}张图片，总用时{:.2f}s".format(count, end-start))
 
 
         

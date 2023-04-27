@@ -13,6 +13,12 @@
       <excludeFolder url="file://$MODULE_DIR$/DigitallyReconstructedRadiographs/DRRClassLib/build" />
       <excludeFolder url="file://$MODULE_DIR$/GUI/.pytest_cache/v" />
       <excludeFolder url="file://$MODULE_DIR$/mobilenet/pth" />
+      <excludeFolder url="file://$MODULE_DIR$/mobilenet/result_r" />
+      <excludeFolder url="file://$MODULE_DIR$/mobilenet/result_tx" />
+      <excludeFolder url="file://$MODULE_DIR$/mobilenet/result_ty" />
+      <excludeFolder url="file://$MODULE_DIR$/mobilenet/result_tz" />
+      <excludeFolder url="file://$MODULE_DIR$/CUDA_DigitallyReconstructedRadiographs/SiddonClassLib/lib" />
+      <excludeFolder url="file://$MODULE_DIR$/test/Gimg" />
     </content>
     <orderEntry type="jdk" jdkName="D:\Python\Anaconda3" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />

@@ -4,3 +4,13 @@
 /CUDA_DigitallyReconstructedRadiographs/SiddonPythonModule/build/
 /DigitallyReconstructedRadiographs/DRRClassLib/build/
 /CUDA_DigitallyReconstructedRadiographs/SiddonClassLib/build/
+/mobilenet/result_r/
+/mobilenet/result_tx/
+/mobilenet/result_ty/
+/mobilenet/result_tz/
+/mobilenet/classlabel.json
+/mobilenet/err.txt
+/test/
+/CUDA_DigitallyReconstructedRadiographs/
+/GUI/img/
+/resnet/pth/

@@ -420,14 +420,14 @@ class Ui_MainWindow(object):
         self.NCCLayout.addWidget(self.NCCValue)
 
         # MILayout
-        self.MILayout = QHBoxLayout()
-        self.MILayout.setObjectName(u"MILayout")
+        self.NMILayout = QHBoxLayout()
+        self.NMILayout.setObjectName(u"MILayout")
         self.NMIlabel = QLabel(self.Regipage)
         self.NMIlabel.setObjectName(u"NMIlabel")
-        self.MILayout.addWidget(self.NMIlabel)
+        self.NMILayout.addWidget(self.NMIlabel)
         self.NMIValue = QLineEdit(self.Regipage)
         self.NMIValue.setObjectName(u"NMIValue")
-        self.MILayout.addWidget(self.NMIValue)
+        self.NMILayout.addWidget(self.NMIValue)
 
         # DICELayout
         self.DICELayout = QHBoxLayout()
@@ -443,7 +443,7 @@ class Ui_MainWindow(object):
         self.EvaluateLayout = QHBoxLayout()
         self.EvaluateLayout.setObjectName(u"EvaluateLayout")
         self.EvaluateLayout.addLayout(self.NCCLayout)
-        self.EvaluateLayout.addLayout(self.MILayout)
+        self.EvaluateLayout.addLayout(self.NMILayout)
         self.EvaluateLayout.addLayout(self.DICELayout)
 
         # 整体布局

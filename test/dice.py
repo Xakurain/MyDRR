@@ -2,8 +2,8 @@ import numpy as np
 import cv2
 from PIL import Image
 
-y_true_path = 'F:\\dataset\\imia\\zyt303\drr\\DRRs\\DRRs\\img_0.png'
-y_pred_path = 'F:\\dataset\\imia\\zyt303\drr\\DRRs\\DRRs\\img_0.png'
+y_true_path = 'F:\\dataset\\imia\\zyt303\\DRRs\\new_DRRs\\img_27226.png'
+y_pred_path = 'F:\\code\\python\\iMIA\\MyDRR\\test\\y_pred1.png'
 # y_true_path = 'F:\\dataset\\imia\\zyt303\drr\\rx\\rx_-53.png'
 # y_pred_path = 'F:\\dataset\\imia\\zyt303\drr\\rx\\rx_-54.png'
 # y_true = cv2.imread(y_true_path, cv2.IMREAD_GRAYSCALE)

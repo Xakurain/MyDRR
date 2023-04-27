@@ -7,7 +7,7 @@ import SimpleITK as sitk
 import numpy as np
 import os
 import vtkmodules.all as vtk
-from modules import ui_main, funcs
+from modules import ui_main, funcs, PSO_Regi
 import qdarktheme
 
 import sys
@@ -21,39 +21,48 @@ os.environ["QT_QPA_PLATFORM_PLUGIN_PATH"] = envpath
 
 class Worker(QObject):
     DRRFinishSignal = Signal(str)
-
+    RefineRegiFinishSignal = Signal(object)
     def DrrInit(self, dcmPath):
-        print('DrrInit')
+        # print('DrrInit')
         self.p = pyDRRGenerate(dcmPath, False)
         self.p.ReadDCM()
-
     def RegistrationInit(self):
-        self.net, self.device = funcs.predictinit()
-
-    def GenerateDRR(self, rx, ry, rz, tx, ty, tz, path):
+        self.net_r, self.net_tx, self.net_ty, self.net_tz, self.device = funcs.predictinit()
+    def GenerateDRR(self, rx, ry, rz, tx, ty, tz, path, type):
         sid = 400
         sx = 3
         sy = 3
-        dx = 512
-        dy = 512
+        dx = type[1]
+        dy = type[0]
         threshold = 0
         self.p.Drr1(path, rx, ry, rz, tx, ty, tz, sid, sx, sy, dx, dy, threshold)
         self.DRRFinishSignal.emit(path)
+    def RefineRegi(self, pred_label, topk2_label, pred_value, topk2_value, y_true_path):
+        # print('456')
+        x_top1 = [float(value) for value in pred_label.values()]
+        x_top2 = [float(value) for value in topk2_label.values()]
+        value_top1 = [float(value) for value in pred_value.values()]
+        value_top2 = [float(value) for value in topk2_value.values()]
+        x_top1 = np.array(x_top1).astype(np.float32)
+        x_top2 = np.array(x_top2).astype(np.float32)
+        value_top1 = np.array(value_top1).astype(np.float32)
+        value_top2 = np.array(value_top2).astype(np.float32)
 
+        g = PSO_Regi.PSO(self.p, x_top1, x_top2, value_top1, value_top2, y_true_path)
+        self.RefineRegiFinishSignal.emit(g)
 class WorkerforRegstration(QObject):
     over = Signal(dict)
-
-    def Registration(self, img_path, net, device):
-        print('predict')
-        movedlabels = funcs.predict(net, device, img_path)
-        self.over.emit(movedlabels)
+    def Registration(self, img_path, net_r, net_tx, net_ty, net_tz, device):
+        # print('predict')
+        self.movedlabels, self.topk2_label, self.pre_value, self.topk2_value = funcs.predict(net_r, net_tx, net_ty, net_tz, device, img_path)
+        self.over.emit(self.movedlabels)
 
 class MyWindow(QMainWindow):
     DrrInitSignal = Signal(str)
     RegistrationInitSignal = Signal()
-    GenerateDRRSignal = Signal(float, float, float, float, float, float, str)
-    RegistrationSignal = Signal(str, object, object)
-
+    GenerateDRRSignal = Signal(float, float, float, float, float, float, str, object)
+    RegistrationSignal = Signal(str, object, object, object, object, object)
+    RefineRegiSignal = Signal(object, object, object, object, str)
     def __init__(self):
         QMainWindow.__init__(self)
 
@@ -75,9 +84,11 @@ class MyWindow(QMainWindow):
         self.RegistrationInitSignal.connect(self.worker.RegistrationInit)
         self.GenerateDRRSignal.connect(self.worker.GenerateDRR)
         self.RegistrationSignal.connect(self.worker1.Registration)
+        self.RefineRegiSignal.connect(self.worker.RefineRegi)
 
         self.worker.DRRFinishSignal.connect(self.showMovedImage)
         self.worker1.over.connect(self.stopRegistration)
+        self.worker.RefineRegiFinishSignal.connect(self.showRefineRegi)
 
         #工作实例绑定线程
         self.worker.moveToThread(self.work_thread)
@@ -87,6 +98,7 @@ class MyWindow(QMainWindow):
         widgets.FileOpenButton.clicked.connect(self.buttonClick)
         widgets.LoadImage.clicked.connect(self.buttonClick)
         widgets.StartRegistrationButton.clicked.connect(self.buttonClick)
+        widgets.RefineButton.clicked.connect(self.buttonClick)
         widgets.AnalysisButton.clicked.connect(self.buttonClick)
         widgets.btnRegi.clicked.connect(self.buttonClick1)
         widgets.btnCT.clicked.connect(self.buttonClick1)
@@ -137,20 +149,26 @@ class MyWindow(QMainWindow):
                 self.save_dcm_name = f'F:\\code\\python\\iMIA\\MyDRR\\GUI\\img\\{curtime}.png'
                 self.GenerateDRRSignal.emit(rx, ry, rz, tx, ty, tz, self.save_dcm_name)
             else:
-                FilePath = QFileDialog.getOpenFileName(self, '选择文件', './', 'Image Files(*.jpg *.png *.bmp *.tif *.tiff *.dcm *.dicom *.nii *.nii.gz *.mhd *.mha)')
+                FilePath = QFileDialog.getOpenFileName(self, '选择文件', 'F:\\dataset\\imia\\zyt303\\DRRs\\new_DRRs',
+                                                       'Image Files(*.jpg *.png *.bmp *.tif *.tiff *.dcm *.dicom *.nii *.nii.gz *.mhd *.mha)')
                 if FilePath[0] != '':
                     self.FixedImagePath = FilePath[0]
         elif btnName == 'LoadImage':
             if widgets.isInputLabel.currentText() == '输入参数':
                 self.nowshowimg = self.save_dcm_name
-                funcs.showImage(widgets.FixedImage, self.save_dcm_name)
+                self.FixedImageType = funcs.showImage(widgets.FixedImage, self.save_dcm_name)
             else:
                 self.nowshowimg = self.FixedImagePath
-                funcs.showImage(widgets.FixedImage, self.FixedImagePath)
+                self.FixedImageType = funcs.showImage(widgets.FixedImage, self.FixedImagePath)
 
         elif btnName == 'StartRegistrationButton':
             self.work_thread1.start()
-            self.RegistrationSignal.emit(self.nowshowimg, self.worker.net, self.worker.device)
+            self.RegistrationSignal.emit(self.nowshowimg, self.worker.net_r, self.worker.net_tx,
+                                         self.worker.net_ty, self.worker.net_tz, self.worker.device)
+
+        elif btnName == 'RefineButton':
+            # print('Refine')
+            self.RefineRegiSignal.emit(self.worker1.movedlabels, self.worker1.topk2_label, self.worker1.pre_value, self.worker1.topk2_value, self.nowshowimg)
 
         elif btnName == 'AnalysisButton':
             funcs.showImage(widgets.DifferenceImage, [self.nowshowimg, self.MovedImagePath], mode='difference')
@@ -158,8 +176,19 @@ class MyWindow(QMainWindow):
             widgets.DICECValue.setText(str(d))
             widgets.NCCValue.setText(str(ncc))
             widgets.NMIValue.setText(str(nmi))
+
+    def GenerateMovedImage(self):
+        curtime = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S')
+        self.MovedImagePath = f'F:\\code\\python\\iMIA\\MyDRR\\GUI\\img\\{curtime}_moved.png'
+        rx = float(widgets.rxMovedValue.text())
+        ry = float(widgets.ryMovedValue.text())
+        rz = float(widgets.rzMovedValue.text())
+        tx = float(widgets.txMovedValue.text())
+        ty = float(widgets.tyMovedValue.text())
+        tz = float(widgets.tzMovedValue.text())
+        self.GenerateDRRSignal.emit(rx, ry, rz, tx, ty, tz, self.MovedImagePath, self.FixedImageType)
     def stopRegistration(self, movedlabels):
-        print(movedlabels)
+        # print(movedlabels)
         self.work_thread1.quit()
         self.work_thread1.wait()
         widgets.rxMovedValue.setText(str(movedlabels['rx']))
@@ -168,18 +197,25 @@ class MyWindow(QMainWindow):
         widgets.txMovedValue.setText(str(movedlabels['tx']))
         widgets.tyMovedValue.setText(str(movedlabels['ty']))
         widgets.tzMovedValue.setText(str(movedlabels['tz']))
-        curtime = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S')
-        self.MovedImagePath = f'F:\\code\\python\\iMIA\\MyDRR\\GUI\\img\\{curtime}_moved.png'
-        rx = float(movedlabels['rx'])
-        ry = float(movedlabels['ry'])
-        rz = float(movedlabels['rz'])
-        tx = float(movedlabels['tx'])
-        ty = float(movedlabels['ty'])
-        tz = float(movedlabels['tz'])
-        self.GenerateDRRSignal.emit(rx, ry, rz, tx, ty, tz, self.MovedImagePath)
+        # 生成配准图像
+        self.GenerateMovedImage()
     def showMovedImage(self, movedImagePath):
         if movedImagePath[-9:-4] == 'moved':
             funcs.showImage(widgets.MovedImage, movedImagePath)
+
+    def showRefineRegi(self, g):
+        MessageBox = QMessageBox()
+        MessageBox.information(self, "精配准", "精配准结束")  # Critical对话框
+        widgets.rxMovedValue.setText(str(g[0]))
+        widgets.ryMovedValue.setText(str(g[1]))
+        widgets.rzMovedValue.setText(str(g[2]))
+        widgets.txMovedValue.setText(str(g[3]))
+        widgets.tyMovedValue.setText(str(g[4]))
+        widgets.tzMovedValue.setText(str(g[5]))
+        # 生成配准图像
+        self.GenerateMovedImage()
+
+
     def buttonClick1(self):
         btn = self.sender()
         btnName = btn.objectName()
@@ -188,16 +224,16 @@ class MyWindow(QMainWindow):
         elif btnName == 'btnCT':
             widgets.stackedWidget.setCurrentIndex(1)
         elif btnName == 'btnOpenCT':
-            self.CTPath = QFileDialog.getExistingDirectory(self, '选择文件夹', './')
-            print(self.CTPath)
+            self.CTPath = QFileDialog.getExistingDirectory(self, '选择文件夹', 'F:\\dataset\\imia\\zyt303')
+            # print(self.CTPath)
             reader = sitk.ImageSeriesReader()
             dicom_names = reader.GetGDCMSeriesFileNames(self.CTPath)
             reader.SetFileNames(dicom_names)
             image = reader.Execute()
-            print(image.GetSize())
-            print(image.GetSpacing())
+            # print(image.GetSize())
+            # print(image.GetSpacing())
             image_array = sitk.GetArrayFromImage(image)
-            print(image_array.shape)
+            # print(image_array.shape)
 
             widgets.pg_tra.setImage(np.rot90(image_array, k=1, axes=(1, 2)))
 
@@ -215,8 +251,6 @@ class MyWindow(QMainWindow):
             self.show3D()
         elif btnName == 'btnShowInfo':
             self.showInfo()
-
-
     def getInfo(self, series0, size, spacing, origin):
         self.dataSize = size
         self.dataSpacing = spacing
@@ -226,7 +260,6 @@ class MyWindow(QMainWindow):
         self.dataID = sitk.ReadImage(series0).GetMetaData('0010|0020')        #ID
         self.dataModality = sitk.ReadImage(series0).GetMetaData('0008|0060')  #模态
     def showInfo(self):
-
         widgets.ListWidget.item(1).setText(self.dataName)
         widgets.ListWidget.item(3).setText(self.dataSex)
         widgets.ListWidget.item(5).setText(self.dataID)
@@ -235,9 +268,8 @@ class MyWindow(QMainWindow):
         widgets.ListWidget.item(11).setText(str(self.dataSpacing[0]) + ' * ' + str(self.dataSpacing[1]) + ' * ' + str(self.dataSpacing[2]))
         widgets.ListWidget.item(13).setText(str(self.dataOrigin))
 
-
-    #数据源（ sourse )﹣映射器（ mapper )﹣演员（ actor )﹣渲染器（ renderer )﹣窗口（ renderwindow )﹣交互器（ RenderWindowInteractor )
     def show3D(self):
+        # 数据源（ sourse )﹣映射器（ mapper )﹣演员（ actor )﹣渲染器（ renderer )﹣窗口（ renderwindow )﹣交互器（ RenderWindowInteractor )
         reader = vtk.vtkDICOMImageReader()
         reader.SetDirectoryName(self.CTPath)
 

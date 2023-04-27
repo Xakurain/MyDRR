@@ -7,10 +7,9 @@ import json
 import torch
 from PIL import Image
 from torchvision import transforms
-import sys
 import numpy as np
 import math
-from model import Myresnet34
+from model_v3 import mobilenet_v3_large
 
 
 def showImage(parent, img, mode='path'):
@@ -24,7 +23,7 @@ def showImage(parent, img, mode='path'):
         img_pred_bgr = cv2.imread(img_pred)
         img_pred_rgb = cv2.cvtColor(img_pred_bgr, cv2.COLOR_BGR2RGB)
         # 调整参考图像尺寸与预测图像尺寸一致
-        img_true_rgb = cv2.resize(img_true_rgb, (img_pred_rgb.shape[1], img_pred_rgb.shape[0]))
+        # img_true_rgb = cv2.resize(img_true_rgb, (img_pred_rgb.shape[1], img_pred_rgb.shape[0]))
         img_rgb = img_pred_rgb - img_true_rgb
         img_rgb = cv2.normalize(img_rgb, None, 0, 255, cv2.NORM_MINMAX, cv2.CV_8U)
 
@@ -37,26 +36,37 @@ def showImage(parent, img, mode='path'):
     pix_img = QPixmap.fromImage(qt_img).scaled(400, 400, aspectMode=Qt.KeepAspectRatio)
     parent.setScaledContents(True)
     parent.setPixmap(pix_img)
+    return [img_rgb.shape[1], img_rgb.shape[0]]
 
 def predictinit():
-    print('predictinit')
+    # print('predictinit')
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
-    net = Myresnet34(num_rx_classes=5,
-                     num_ry_classes=5,
-                     num_rz_classes=3,
-                     num_tx_classes=10,
-                     num_ty_classes=5,
-                     num_tz_classes=10)
+    net_r = mobilenet_v3_large(num_rx_classes=17,num_ry_classes=17, num_rz_classes=9,num_tx_classes=21,num_ty_classes=9,
+                              num_tz_classes=21,label_choose=['rx', 'ry', 'rz'])
+    net_tx = mobilenet_v3_large(num_rx_classes=17,num_ry_classes=17, num_rz_classes=9,num_tx_classes=21,num_ty_classes=9,
+                              num_tz_classes=21,label_choose=['tx'])
+    net_ty = mobilenet_v3_large(num_rx_classes=17,num_ry_classes=17, num_rz_classes=9,num_tx_classes=21,num_ty_classes=9,
+                              num_tz_classes=21,label_choose=['ty'])
+    net_tz = mobilenet_v3_large(num_rx_classes=17,num_ry_classes=17, num_rz_classes=9,num_tx_classes=21,num_ty_classes=9,
+                              num_tz_classes=21, label_choose=['tz'])
 
-    model_weight_path = "F:\\code\\python\\iMIA\\MyDRR\\resnet\\resnet34_last.pth"
-    assert os.path.exists(model_weight_path), "file {} does not exist.".format(model_weight_path)
-    net.load_state_dict(torch.load(model_weight_path, map_location='cpu'))
-    net.to(device)
-    return net, device
+    model_weight_path1 = "F:\\code\\python\\iMIA\\MyDRR\\mobilenet\\result_r\\mobilenet_r_last.pth"
+    model_weight_path2 = "F:\\code\\python\\iMIA\\MyDRR\\mobilenet\\result_tx\\mobilenet_tx_tx.pth"
+    model_weight_path3 = "F:\\code\\python\\iMIA\\MyDRR\\mobilenet\\result_ty\\mobilenet_ty_ty.pth"
+    model_weight_path4 = "F:\\code\\python\\iMIA\\MyDRR\\mobilenet\\result_tz\\mobilenet_tz_tz.pth"
+    net_r.load_state_dict(torch.load(model_weight_path1, map_location=device))
+    net_tx.load_state_dict(torch.load(model_weight_path2, map_location=device))
+    net_ty.load_state_dict(torch.load(model_weight_path3, map_location=device))
+    net_tz.load_state_dict(torch.load(model_weight_path4, map_location=device))
+    net_r.to(device)
+    net_tx.to(device)
+    net_ty.to(device)
+    net_tz.to(device)
+    return net_r, net_tx, net_ty, net_tz, device
 
 
-def predict(net, device, img_path):
+def predict(net_r, net_tx, net_ty, net_tz, device, img_path):
     data_transform = transforms.Compose(
         [transforms.Resize(256),
          transforms.CenterCrop(224),
@@ -76,19 +86,47 @@ def predict(net, device, img_path):
     # expand batch dimension
     img = torch.unsqueeze(img, dim=0)
 
-    net.eval()
+    pre_label = {}
+    topk2_label = {}
+    pre_value = {}
+    topk2_value = {}
+    net_r.eval()
     with torch.no_grad():
-        output = net(img.to(device))
-        pre_label = {}
-        for label0 in label_lst:
-            _, predicted_label0 = output[label0].cpu().max(1)
-            pre_label0 = label_dict[label0][str(predicted_label0.tolist()[0])]
-            pre_label[label0] = pre_label0
+        output_r = net_r(img.to(device))
+        for label0 in ['rx', 'ry', 'rz']:
+            values, indices = output_r[label0].cpu().topk(2, dim=1, largest=True, sorted=True)
+            pre_label[label0] = label_dict[label0][str(indices.numpy()[0][0])]
+            topk2_label[label0] = label_dict[label0][str(indices.numpy()[0][1])]
+            pre_value[label0] = values.numpy()[0][0]
+            topk2_value[label0] = values.numpy()[0][1]
+    net_tx.eval()
+    with torch.no_grad():
+        output_tx = net_tx(img.to(device))
+        values, indices = output_tx['tx'].cpu().topk(2, dim=1, largest=True, sorted=True)
+        pre_label['tx'] = label_dict['tx'][str(indices.numpy()[0][0])]
+        topk2_label['tx'] = label_dict['tx'][str(indices.numpy()[0][1])]
+        pre_value['tx'] = values.numpy()[0][0]
+        topk2_value['tx'] = values.numpy()[0][1]
 
-        print('pre_rx: {} pre_ry: {} pre_rz: {} pre_tx: {} pre_ty: {} pre_tz: {}'.format(
-            pre_label['rx'], pre_label['ry'], pre_label['rz'], pre_label['tx'], pre_label['ty'], pre_label['tz']
-        ))
-        return pre_label
+    net_ty.eval()
+    with torch.no_grad():
+        output_ty = net_ty(img.to(device))
+        values, indices = output_ty['ty'].cpu().topk(2, dim=1, largest=True, sorted=True)
+        pre_label['ty'] = label_dict['ty'][str(indices.numpy()[0][0])]
+        topk2_label['ty'] = label_dict['ty'][str(indices.numpy()[0][1])]
+        pre_value['ty'] = values.numpy()[0][0]
+        topk2_value['ty'] = values.numpy()[0][1]
+
+    net_tz.eval()
+    with torch.no_grad():
+        output_tz = net_tz(img.to(device))
+        values, indices = output_tz['tz'].cpu().topk(2, dim=1, largest=True, sorted=True)
+        pre_label['tz'] = label_dict['tz'][str(indices.numpy()[0][0])]
+        topk2_label['tz'] = label_dict['tz'][str(indices.numpy()[0][1])]
+        pre_value['tz'] = values.numpy()[0][0]
+        topk2_value['tz'] = values.numpy()[0][1]
+
+    return pre_label, topk2_label, pre_value, topk2_value
 
 #Dice系数
 def dice(y_true, y_pred):
