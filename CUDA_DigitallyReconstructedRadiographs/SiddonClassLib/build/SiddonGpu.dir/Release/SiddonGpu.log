@@ -10,19 +10,19 @@ F:\code\python\iMIA\MyDRR\CUDA_DigitallyReconstructedRadiographs\SiddonClassLib\
     the file 'F:/code/python/iMIA/MyDRR/CUDA_DigitallyReconstructedRadiographs/SiddonClassLib/build/CMakeFiles/SiddonGpu.dir/SiddonLib/SiddonGpu_generated_siddon_class.cu.obj.depend'
     is newer than 'F:/code/python/iMIA/MyDRR/CUDA_DigitallyReconstructedRadiographs/SiddonClassLib/build/CMakeFiles/generate.stamp.depend'
     result='-1'
-  -- Selecting Windows SDK version 10.0.22000.0 to target Windows 10.0.22621.
+  -- Selecting Windows SDK version 10.0.19041.0 to target Windows 10.0.22621.
   CMake Warning (dev) in CMakeLists.txt:
   -- Configuring done
     No cmake_minimum_required command is present.  A line of code such as
   
-      cmake_minimum_required(VERSION 3.25)
+      cmake_minimum_required(VERSION 3.24)
   
     should be added at the top of the file.  The version specified may be lower
     if you wish to support older CMake versions for this project.  For more
     information run "cmake --help-policy CMP0000".
   This warning is for project developers.  Use -Wno-dev to suppress it.
   
-  CMake Warning (dev) at D:/Program Files/CMake/share/cmake-3.25/Modules/FindCUDA.cmake:1989 (add_library):
+  CMake Warning (dev) at D:/Program Files/CMake/share/cmake-3.24/Modules/FindCUDA.cmake:1985 (add_library):
     Policy CMP0003 should be set before this line.  Add code such as
   
       if(COMMAND cmake_policy)

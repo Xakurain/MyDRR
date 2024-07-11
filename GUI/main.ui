@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>834</width>
-    <height>506</height>
+    <width>871</width>
+    <height>570</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -21,7 +21,7 @@
        <layout class="QHBoxLayout" name="horizontalLayout_12">
         <item>
          <layout class="QVBoxLayout" name="verticalLayout_8">
-          <item alignment="Qt::AlignHCenter">
+          <item alignment="Qt::AlignHCenter|Qt::AlignVCenter">
            <widget class="QLabel" name="rxlabel">
             <property name="text">
              <string>rx</string>
@@ -45,7 +45,7 @@
         </item>
         <item>
          <layout class="QVBoxLayout" name="verticalLayout_10">
-          <item alignment="Qt::AlignHCenter">
+          <item alignment="Qt::AlignHCenter|Qt::AlignVCenter">
            <widget class="QLabel" name="rylabel">
             <property name="text">
              <string>ry</string>
@@ -69,7 +69,7 @@
         </item>
         <item>
          <layout class="QVBoxLayout" name="verticalLayout_11">
-          <item alignment="Qt::AlignHCenter">
+          <item alignment="Qt::AlignHCenter|Qt::AlignVCenter">
            <widget class="QLabel" name="rzlabel">
             <property name="text">
              <string>rz</string>
@@ -93,7 +93,7 @@
         </item>
         <item>
          <layout class="QVBoxLayout" name="verticalLayout_12">
-          <item alignment="Qt::AlignHCenter">
+          <item alignment="Qt::AlignHCenter|Qt::AlignVCenter">
            <widget class="QLabel" name="txlabel">
             <property name="text">
              <string>tx</string>
@@ -117,7 +117,7 @@
         </item>
         <item>
          <layout class="QVBoxLayout" name="verticalLayout_13">
-          <item alignment="Qt::AlignHCenter">
+          <item alignment="Qt::AlignHCenter|Qt::AlignVCenter">
            <widget class="QLabel" name="tylabel">
             <property name="text">
              <string>ty</string>
@@ -141,7 +141,7 @@
         </item>
         <item>
          <layout class="QVBoxLayout" name="verticalLayout_14">
-          <item alignment="Qt::AlignHCenter">
+          <item alignment="Qt::AlignHCenter|Qt::AlignVCenter">
            <widget class="QLabel" name="tzlabel">
             <property name="text">
              <string>tz</string>
@@ -165,7 +165,7 @@
         </item>
         <item>
          <layout class="QVBoxLayout" name="verticalLayout_15">
-          <item alignment="Qt::AlignHCenter">
+          <item alignment="Qt::AlignHCenter|Qt::AlignVCenter">
            <widget class="QRadioButton" name="isInputLabel">
             <property name="text">
              <string>输入参数</string>
@@ -199,7 +199,7 @@
           <item>
            <widget class="QPushButton" name="LoadImage">
             <property name="text">
-             <string>导入图像</string>
+             <string>加载图像</string>
             </property>
             <property name="icon">
              <iconset>
@@ -217,6 +217,38 @@
               <normaloff>icons/cil-chart.png</normaloff>icons/cil-chart.png</iconset>
             </property>
            </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QVBoxLayout" name="verticalLayout_2">
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_15">
+            <item>
+             <widget class="QLabel" name="label">
+              <property name="text">
+               <string>参考图像选择路径：</string>
+              </property>
+             </widget>
+            </item>
+            <item alignment="Qt::AlignVCenter">
+             <widget class="QLineEdit" name="lineEdit"/>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_18">
+            <item>
+             <widget class="QLabel" name="label_2">
+              <property name="text">
+               <string>参考图像当前路径：</string>
+              </property>
+             </widget>
+            </item>
+            <item alignment="Qt::AlignHCenter|Qt::AlignVCenter">
+             <widget class="QLineEdit" name="lineEdit_2"/>
+            </item>
+           </layout>
           </item>
          </layout>
         </item>
@@ -527,6 +559,43 @@
           </item>
          </layout>
         </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_21">
+          <property name="spacing">
+           <number>7</number>
+          </property>
+          <item>
+           <widget class="QLabel" name="label_3">
+            <property name="text">
+             <string>图像验证模式</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QComboBox" name="comboBox"/>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_5">
+            <property name="text">
+             <string>是否进行阈值分割</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QComboBox" name="comboBox_3"/>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_6">
+            <property name="text">
+             <string>边缘提取算法</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QComboBox" name="comboBox_4"/>
+          </item>
+         </layout>
+        </item>
        </layout>
       </item>
      </layout>
@@ -538,8 +607,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>834</width>
-     <height>22</height>
+     <width>871</width>
+     <height>17</height>
     </rect>
    </property>
   </widget>

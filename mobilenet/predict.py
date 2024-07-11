@@ -1,6 +1,7 @@
 import os
 import csv
 import json
+import time
 from PIL import Image
 import torch
 from torchvision import transforms
@@ -101,7 +102,9 @@ if __name__ == '__main__':
             ty_labels.append(row['ty'])
             tz_labels.append(row['tz'])
 
+    starttime = time.time()
     for i in range(len(data_path)):
+    # for i in range(100):
         pre_img = main(data_path[i])
         tru_img = {'rx': rx_labels[i], 'ry': ry_labels[i], 'rz': rz_labels[i], 'tx': tx_labels[i], 'ty': ty_labels[i], 'tz': tz_labels[i]}
         for label0 in pre_img:
@@ -109,15 +112,17 @@ if __name__ == '__main__':
                 pre_acc_num[label0] += 1
             else:
                 err_img.append(data_path[i])
-        if(i % 100 == 0):
-            print('已处理{}张'.format(i))
-    pre_acc = {}
-    for label0, num in pre_acc_num.items():
-        pre_acc[label0] = num / len(data_path)
-    print('acc_rx: %.3f acc_ry: %.3f acc_rz: %.3f acc_tx: %.3f acc_ty: %.3f acc_tz: %.3f' %
-          (pre_acc['rx'], pre_acc['ry'], pre_acc['rz'], pre_acc['tx'], pre_acc['ty'], pre_acc['tz']))
-    print('err_img: {}'.format(err_img))
-    print('err_num: {}'.format(len(err_img)))
-
-    img_path = 'F:\\dataset\\imia\\zyt303\\DRRs\\new_DRRs\\img_1.png'
-    main(img_path)
+        if(i % 100 == 0 and i != 0):
+            endtime = time.time()
+            print('第{}-{}张，time: {:.3f}'.format(i-100, i, endtime - starttime))
+            starttime = time.time()
+    # pre_acc = {}
+    # for label0, num in pre_acc_num.items():
+    #     pre_acc[label0] = num / len(data_path)
+    # print('acc_rx: %.3f acc_ry: %.3f acc_rz: %.3f acc_tx: %.3f acc_ty: %.3f acc_tz: %.3f' %
+    #       (pre_acc['rx'], pre_acc['ry'], pre_acc['rz'], pre_acc['tx'], pre_acc['ty'], pre_acc['tz']))
+    # print('err_img: {}'.format(err_img))
+    # print('err_num: {}'.format(len(err_img)))
+    #
+    # img_path = 'F:\\dataset\\imia\\zyt303\\DRRs\\new_DRRs\\img_1.png'
+    # main(img_path)

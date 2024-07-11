@@ -23,10 +23,11 @@ class Worker(QObject):
     DRRFinishSignal = Signal(str)
     RefineRegiFinishSignal = Signal(object)
     def DrrInit(self, dcmPath):
-        # print('DrrInit')
+        print('DrrInit')
         self.p = pyDRRGenerate(dcmPath, False)
         self.p.ReadDCM()
     def RegistrationInit(self):
+        print('RegistrationInit')
         self.net_r, self.net_tx, self.net_ty, self.net_tz, self.device = funcs.predictinit()
     def GenerateDRR(self, rx, ry, rz, tx, ty, tz, path, type):
         sid = 400
@@ -65,7 +66,6 @@ class MyWindow(QMainWindow):
     RefineRegiSignal = Signal(object, object, object, object, str)
     def __init__(self):
         QMainWindow.__init__(self)
-
         # SET AS GLOBAL WIDGETS
         # ///////////////////////////////////////////////////////////////
         self.ui = ui_main.Ui_MainWindow()
@@ -105,6 +105,10 @@ class MyWindow(QMainWindow):
         widgets.btnOpenCT.clicked.connect(self.buttonClick1)
         widgets.btnShow3D.clicked.connect(self.buttonClick1)
         widgets.btnShowInfo.clicked.connect(self.buttonClick1)
+        widgets.ImageEvaluateModecomboBox.activated.connect(self.comoboBoxClick)
+        widgets.isUseSegcomboBox.activated.connect(self.comoboBoxClick)
+        widgets.selectContourcomboBox.activated.connect(self.comoboBoxClick)
+        widgets.ImageEvaluateShowButton.clicked.connect(self.comoboBoxClick)
 
         self.work_thread.start()
         self.threadStart()
@@ -128,6 +132,15 @@ class MyWindow(QMainWindow):
                 widgets.txFixedValue.setEnabled(True)
                 widgets.tyFixedValue.setEnabled(True)
                 widgets.tzFixedValue.setEnabled(True)
+                try:
+                    self.save_dcm_name
+                except AttributeError:
+                    widgets.fixedImageSelectedPath.setPlaceholderText('请选择文件')
+                else:
+                    if self.save_dcm_name is not None:
+                        widgets.fixedImageSelectedPath.setText(self.save_dcm_name)
+                    else:
+                        widgets.fixedImageSelectedPath.setPlaceholderText('请选择文件')
             else:
                 widgets.FileOpenButton.setText('打开文件')
                 widgets.rxFixedValue.setEnabled(False)
@@ -136,6 +149,16 @@ class MyWindow(QMainWindow):
                 widgets.txFixedValue.setEnabled(False)
                 widgets.tyFixedValue.setEnabled(False)
                 widgets.tzFixedValue.setEnabled(False)
+                try:
+                    self.FixedImagePath
+                except AttributeError:
+                    widgets.fixedImageSelectedPath.setPlaceholderText('请选择文件')
+                    
+                else:
+                    if self.FixedImagePath is not None:
+                        widgets.fixedImageSelectedPath.setText(self.FixedImagePath)
+                    else:
+                        widgets.fixedImageSelectedPath.setPlaceholderText('请选择文件')
 
         elif btnName == 'FileOpenButton':
             if widgets.isInputLabel.currentText() == '输入参数':
@@ -147,19 +170,28 @@ class MyWindow(QMainWindow):
                 tz = float(widgets.tzFixedValue.text())
                 curtime = datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S')
                 self.save_dcm_name = f'F:\\code\\python\\iMIA\\MyDRR\\GUI\\img\\{curtime}.png'
-                self.GenerateDRRSignal.emit(rx, ry, rz, tx, ty, tz, self.save_dcm_name)
+                self.GenerateDRRSignal.emit(rx, ry, rz, tx, ty, tz, self.save_dcm_name, [512, 512])
             else:
                 FilePath = QFileDialog.getOpenFileName(self, '选择文件', 'F:\\dataset\\imia\\zyt303\\DRRs\\new_DRRs',
                                                        'Image Files(*.jpg *.png *.bmp *.tif *.tiff *.dcm *.dicom *.nii *.nii.gz *.mhd *.mha)')
                 if FilePath[0] != '':
                     self.FixedImagePath = FilePath[0]
+                    widgets.fixedImageSelectedPath.setText(self.FixedImagePath)
+                else:
+                    # 提示框，提示未选择文件
+                    QMessageBox.warning(self, 'Warning', '未选择文件')
         elif btnName == 'LoadImage':
             if widgets.isInputLabel.currentText() == '输入参数':
                 self.nowshowimg = self.save_dcm_name
+                widgets.fixedImagePath.setText(self.save_dcm_name)
                 self.FixedImageType = funcs.showImage(widgets.FixedImage, self.save_dcm_name)
+                QMessageBox.information(self, 'Information', '加载成功，参考图像来自于生成')
+                
             else:
                 self.nowshowimg = self.FixedImagePath
+                widgets.fixedImagePath.setText(self.FixedImagePath)
                 self.FixedImageType = funcs.showImage(widgets.FixedImage, self.FixedImagePath)
+                QMessageBox.information(self, 'Information', '加载成功，参考图像来自于文件')
 
         elif btnName == 'StartRegistrationButton':
             self.work_thread1.start()
@@ -202,6 +234,10 @@ class MyWindow(QMainWindow):
     def showMovedImage(self, movedImagePath):
         if movedImagePath[-9:-4] == 'moved':
             funcs.showImage(widgets.MovedImage, movedImagePath)
+        else:
+            # 提示框，提示参考DRR生成成功
+            QMessageBox.information(self, 'Information', '参考图像生成成功')
+            widgets.fixedImageSelectedPath.setText(movedImagePath)
 
     def showRefineRegi(self, g):
         MessageBox = QMessageBox()
@@ -215,7 +251,46 @@ class MyWindow(QMainWindow):
         # 生成配准图像
         self.GenerateMovedImage()
 
-
+    def comoboBoxClick(self):
+        combox = self.sender()
+        comboxName = combox.objectName()
+        if comboxName == 'ImageEvaluateModecomboBox':
+            if widgets.ImageEvaluateModecomboBox.currentText() == '差值图':
+                widgets.isUseSegcomboBox.setEnabled(False)
+                widgets.selectContourcomboBox.setEnabled(False)
+            elif widgets.ImageEvaluateModecomboBox.currentText() == '配准图像叠加参考图像边缘':
+                widgets.isUseSegcomboBox.setEnabled(True)
+                widgets.selectContourcomboBox.setEnabled(True)
+            elif widgets.ImageEvaluateModecomboBox.currentText() == '参考图像叠加配准图像边缘':
+                widgets.isUseSegcomboBox.setEnabled(True)
+                widgets.selectContourcomboBox.setEnabled(True)
+        elif comboxName == 'isUseSegcomboBox':
+            pass
+        elif comboxName == 'selectContourcomboBox':
+            pass
+        elif comboxName == 'ImageEvaluateShowButton':
+            if widgets.ImageEvaluateModecomboBox.currentText() == '差值图':
+                funcs.showImage2(widgets.DifferenceImage, self.nowshowimg, self.MovedImagePath, mode='differ')
+            elif widgets.ImageEvaluateModecomboBox.currentText() == '配准图像叠加参考图像边缘':
+                isUseSeg = False
+                if widgets.isUseSegcomboBox.currentText() == '不采用阈值分割':
+                    isUseSeg = False
+                else:
+                    isUseSeg = True
+                contourType = widgets.selectContourcomboBox.currentText()
+                funcs.showImage2(widgets.DifferenceImage, self.nowshowimg, self.MovedImagePath, mode='contour1', seg=isUseSeg, contourType=contourType)  
+                # 提示框，提示验证图像计算完成
+                QMessageBox.information(self, 'Information', '验证图像计算完成') 
+            elif widgets.ImageEvaluateModecomboBox.currentText() == '参考图像叠加配准图像边缘':
+                isUseSeg = False
+                if widgets.isUseSegcomboBox.currentText() == '不采用阈值分割':
+                    isUseSeg = False
+                else:
+                    isUseSeg = True
+                contourType = widgets.selectContourcomboBox.currentText()
+                funcs.showImage2(widgets.DifferenceImage, self.nowshowimg, self.MovedImagePath, mode='contour2', seg=isUseSeg, contourType=contourType)
+                # 提示框，提示验证图像计算完成
+                QMessageBox.information(self, 'Information', '验证图像计算完成') 
     def buttonClick1(self):
         btn = self.sender()
         btnName = btn.objectName()
@@ -225,6 +300,7 @@ class MyWindow(QMainWindow):
             widgets.stackedWidget.setCurrentIndex(1)
         elif btnName == 'btnOpenCT':
             self.CTPath = QFileDialog.getExistingDirectory(self, '选择文件夹', 'F:\\dataset\\imia\\zyt303')
+            
             # print(self.CTPath)
             reader = sitk.ImageSeriesReader()
             dicom_names = reader.GetGDCMSeriesFileNames(self.CTPath)
@@ -324,6 +400,7 @@ class MyWindow(QMainWindow):
             event.ignore()
 
 if __name__ == '__main__':
+
     app = QApplication([])
     qdarktheme.setup_theme("light")
 

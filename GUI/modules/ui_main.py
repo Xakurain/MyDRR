@@ -128,12 +128,14 @@ class Ui_MainWindow(object):
         self.rxlabel = QLabel(self.Regipage)
         self.rxlabel.setObjectName(u"rxlabel")
         # rxLabel加入垂直布局
-        self.rxFixedLabelLayout.addWidget(self.rxlabel, 0, Qt.AlignHCenter)
+        self.rxFixedLabelLayout.addWidget(self.rxlabel, 0, Qt.AlignCenter)
         self.rxFixedValue = QDoubleSpinBox(self.Regipage)
         self.rxFixedValue.setObjectName(u"rxFixedValue")
         self.rxFixedValue.setMinimum(-98.000000000000000)
         self.rxFixedValue.setMaximum(-82.000000000000000)
         self.rxFixedValue.setValue(-90.000000000000000)
+        
+        self.rxFixedValue.setAlignment(Qt.AlignCenter)
         # rxFixedValue加入垂直布局
         self.rxFixedLabelLayout.addWidget(self.rxFixedValue)
 
@@ -179,6 +181,7 @@ class Ui_MainWindow(object):
         self.txFixedValue.setMinimum(-20.000000000000000)
         self.txFixedValue.setMaximum(20.000000000000000)
         self.txFixedValue.setValue(0.000000000000000)
+
         # txFixedValue加入垂直布局
         self.txFixedLabelLayout.addWidget(self.txFixedValue)
 
@@ -271,6 +274,34 @@ class Ui_MainWindow(object):
         # AnalysisButton加入垂直布局
         self.RefineandAnalysisLayout.addWidget(self.AnalysisButton)
 
+        # ImagePathLayout
+        self.ImagePathLayout = QVBoxLayout()
+        self.ImagePathLayout.setObjectName(u"ImagePathLayout")
+        self.ImagePathSelectLaout = QHBoxLayout()
+        self.ImagePathSelectLaout.setObjectName(u"ImagePathSelectLaout")
+        self.fixedImageSelectedPathlabel = QLabel(self.Regipage)
+        self.fixedImageSelectedPathlabel.setObjectName("fixedImageSelectedPathlabel")
+        self.fixedImageSelectedPath = QLineEdit(self.Regipage)
+        self.fixedImageSelectedPath.setObjectName("fixedImageSelectedPath")
+        self.fixedImageSelectedPath.setReadOnly(True)
+        self.fixedImageSelectedPath.setPlaceholderText("请选择文件")
+        self.ImagePathSelectLaout.addWidget(self.fixedImageSelectedPathlabel)
+        self.ImagePathSelectLaout.addWidget(self.fixedImageSelectedPath)
+
+        self.ImagaPathOpenLayout = QHBoxLayout()
+        self.ImagaPathOpenLayout.setObjectName(u"ImagaPathOpenLayout")
+        self.fixedImagePathlabel = QLabel(self.Regipage)
+        self.fixedImagePathlabel.setObjectName("fixedImagePathlabel")
+        self.fixedImagePath = QLineEdit(self.Regipage)
+        self.fixedImagePath.setObjectName("fixedImagePath")
+        self.fixedImagePath.setReadOnly(True)
+        self.fixedImagePath.setPlaceholderText("等待加载参考图像")
+        self.ImagaPathOpenLayout.addWidget(self.fixedImagePathlabel)
+        self.ImagaPathOpenLayout.addWidget(self.fixedImagePath)
+
+        self.ImagePathLayout.addLayout(self.ImagePathSelectLaout)
+        self.ImagePathLayout.addLayout(self.ImagaPathOpenLayout)
+
         # ImageLoadTop
         self.ImageLoadTopLayout = QHBoxLayout()
         self.ImageLoadTopLayout.setObjectName(u"ImageLoadTopLayout")
@@ -283,6 +314,7 @@ class Ui_MainWindow(object):
         self.ImageLoadTopLayout.addLayout(self.inputChooseLayout)
         self.ImageLoadTopLayout.addLayout(self.LoadandStartLayout)
         self.ImageLoadTopLayout.addLayout(self.RefineandAnalysisLayout)
+        self.ImageLoadTopLayout.addLayout(self.ImagePathLayout)
 
         self.line = QFrame(self.Regipage)
         self.line.setObjectName(u"line")
@@ -445,7 +477,61 @@ class Ui_MainWindow(object):
         self.EvaluateLayout.addLayout(self.NCCLayout)
         self.EvaluateLayout.addLayout(self.NMILayout)
         self.EvaluateLayout.addLayout(self.DICELayout)
+        
+        # ImageEvaluateModeLayout
+        self.ImageEvaluateModeLayout = QHBoxLayout()
+        self.ImageEvaluateModeLayout.setObjectName(u"ImageEvaluateModeLayout")
+        self.ImageEvaluateModeLabel = QLabel(self.Regipage)
+        self.ImageEvaluateModeLabel.setObjectName(u"ImageEvaluateModeLabel")
+        self.ImageEvaluateModecomboBox = QComboBox(self.Regipage)
+        self.ImageEvaluateModecomboBox.setObjectName(u"ImageEvaluateModecomboBox")
+        self.ImageEvaluateModecomboBox.addItem("差值图")
+        self.ImageEvaluateModecomboBox.addItem("配准图像叠加参考图像边缘")
+        self.ImageEvaluateModecomboBox.addItem("参考图像叠加配准图像边缘")
+        self.ImageEvaluateModeLayout.addWidget(self.ImageEvaluateModeLabel)
+        self.ImageEvaluateModeLayout.addWidget(self.ImageEvaluateModecomboBox)
 
+        # isUseSegLayout
+        self.isUseSegLayout = QHBoxLayout()
+        self.isUseSegLayout.setObjectName(u"isUseSegLayout")
+        self.isUseSegLabel = QLabel(self.Regipage)
+        self.isUseSegLabel.setObjectName(u"isUseSegLabel")
+        self.isUseSegcomboBox = QComboBox(self.Regipage)
+        self.isUseSegcomboBox.setObjectName(u"isUseSegcomboBox")
+        self.isUseSegcomboBox.addItem("不采用阈值分割")
+        self.isUseSegcomboBox.addItem("采用阈值分割")
+        self.isUseSegcomboBox.setEnabled(False)
+        self.isUseSegLayout.addWidget(self.isUseSegLabel)
+        self.isUseSegLayout.addWidget(self.isUseSegcomboBox)
+
+        # selectContourLayout
+        self.selectContourLayout = QHBoxLayout()
+        self.selectContourLayout.setObjectName(u"selectContourLayout")
+        self.selectContourLabel = QLabel(self.Regipage)
+        self.selectContourLabel.setObjectName(u"selectContourLabel")
+        self.selectContourcomboBox = QComboBox(self.Regipage)
+        self.selectContourcomboBox.setObjectName(u"selectContourcomboBox")
+        self.selectContourcomboBox.addItem("Sobel")
+        self.selectContourcomboBox.addItem("Prewitt")
+        self.selectContourcomboBox.addItem("Roberts Cross")
+        self.selectContourcomboBox.addItem("Kirsch")
+        self.selectContourcomboBox.addItem("Canny")
+        self.selectContourcomboBox.setEnabled(False)
+        self.selectContourLayout.addWidget(self.selectContourLabel)
+        self.selectContourLayout.addWidget(self.selectContourcomboBox)
+
+        self.ImageEvaluateShowButton = QPushButton(self.Regipage)
+        self.ImageEvaluateShowButton.setObjectName(u"ImageEvaluateShowButton")
+
+        # ImageLayout
+        self.ImageLayout = QHBoxLayout()
+        self.ImageLayout.setObjectName(u"ImageLayout")
+        self.ImageLayout.addLayout(self.ImageEvaluateModeLayout)
+        self.ImageLayout.addLayout(self.isUseSegLayout)
+        self.ImageLayout.addLayout(self.selectContourLayout)
+        self.ImageLayout.addWidget(self.ImageEvaluateShowButton)
+        
+        
         # 整体布局
         self.gridLayout = QGridLayout(self.Regipage)
         self.gridLayout.setObjectName(u"gridLayout")
@@ -463,11 +549,15 @@ class Ui_MainWindow(object):
         self.gridLayout.addLayout(self.MovedValueLayout, 14, 0, 1, 9)
         self.gridLayout.addWidget(self.Evaluatelabel, 15, 0, 1, 9)
         self.gridLayout.addLayout(self.EvaluateLayout, 16, 0, 1, 9)
-
+        self.gridLayout.addLayout(self.ImageLayout, 17, 0, 1, 9)
+        # print("photoinit0")
         # 展示图片
-        funcs.showImage(self.FixedImage, "img/FixedImageInit.png")
-        funcs.showImage(self.MovedImage, "img/MovedImageInit.png")
-        funcs.showImage(self.DifferenceImage, "img/DifferenceImageInit.png")
+        funcs.showImage(self.FixedImage, "icons/FixedImageInit.png")
+        # print("photoinit1")
+        funcs.showImage(self.MovedImage, "icons/MovedImageInit.png")
+        # print("photoinit2")
+        funcs.showImage(self.DifferenceImage, "icons/DifferenceImageInit.png")
+        # print("photoinit3")
 
         self.rxFixedValue.setEnabled(False)
         self.ryFixedValue.setEnabled(False)
@@ -536,12 +626,7 @@ class Ui_MainWindow(object):
                 self.ListWidget.item(i).setFont(QFont("Roman times", 12, QFont.Bold))
             else:
                 self.ListWidget.item(i).setTextAlignment(Qt.AlignCenter)
-
-
-
         self.LeftInfo.addWidget(self.ListWidget)
-
-
 
         #CT及三维渲染
         self.pg_3d =QVTKRenderWindowInteractor()
@@ -602,6 +687,8 @@ class Ui_MainWindow(object):
         self.FileOpenButton.setText(QCoreApplication.translate("MainWindow", u"打开文件", None))
         self.LoadImage.setText(QCoreApplication.translate("MainWindow", u"加载图像", None))
         self.StartRegistrationButton.setText(QCoreApplication.translate("MainWindow", u"开始配准", None))
+        self.fixedImageSelectedPathlabel.setText(QCoreApplication.translate("MainWindow", "参考图像选择路径：", None))
+        self.fixedImagePathlabel.setText(QCoreApplication.translate("MainWindow", "参考图像当前路径：", None))
         self.RefineButton.setText(QCoreApplication.translate("MainWindow", u"精细配准", None))
         self.AnalysisButton.setText(QCoreApplication.translate("MainWindow", u"指标分析", None))
         self.Fixedlabel.setText(QCoreApplication.translate("MainWindow", u"参考图像", None))
@@ -612,6 +699,10 @@ class Ui_MainWindow(object):
         self.DifferenceImage.setText("")
         self.RegistrationResultlabel.setText(QCoreApplication.translate("MainWindow", u"配准结果", None))
         self.RegistrationValuelabel.setText(QCoreApplication.translate("MainWindow", u"配准参数：", None))
+        self.ImageEvaluateModeLabel.setText(QCoreApplication.translate("MainWindow", "图像验证模式", None))
+        self.isUseSegLabel.setText(QCoreApplication.translate("MainWindow", "是否进行阈值分割", None))
+        self.selectContourLabel.setText(QCoreApplication.translate("MainWindow", "边缘提取算法", None))
+        self.ImageEvaluateShowButton.setText(QCoreApplication.translate("MainWindow", "显示验证图像", None))
         self.rxlabel_2.setText(QCoreApplication.translate("MainWindow", u"rx", None))
         self.rylabel_2.setText(QCoreApplication.translate("MainWindow", u"ry", None))
         self.rzlabel_2.setText(QCoreApplication.translate("MainWindow", u"rz", None))

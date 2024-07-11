@@ -29,29 +29,29 @@ def save_png(filter1, save_dcm_name, save_png_name):
 input_dcm_name = "F:\\dataset\\imia\\zyt303\\ScalarVolume_16"
 output_root = "F:\\dataset\\imia\\zyt303\\drr\\"
 dimension = 3
-verbose = False 
-Drr_info = { 'rx': -90.0,
+verbose = True
+Drr_info = { 'rx': 90.,
              'ry':  0.,
              'rz':  0.,
              'tx': 0.,
              'ty': 0.,
              'tz':  0.,
-             'sid':  400.,
-             'sx': 1.25,
-             'sy':  1.25,
+             'sid':  1011.,
+             'sx': 1.5,
+             'sy':  1.5,
              'dx':  1024.,
              'dy':  1024.}
 
 Drr1 = MyDRRFunction1(input_dcm_name, dimension, verbose)
 image1 = Drr1.read_dicom()
 
-for rx in range(-90, 90):
-    print(rx)
-    save_dcm_name = f'{output_root}dcm\\rx_{rx}.dcm'
-    save_png_name = f'{output_root}png\\rx_{rx}.png'
-    Drr_info['rx'] = rx
-    filter1 = Drr1.drr(image1, Drr_info)
-    save_png(filter1, save_dcm_name, save_png_name)
+# for rx in range(-90, 90):
+#     print(rx)
+save_dcm_name = f'{output_root}dcm\\test1.dcm'
+save_png_name = f'{output_root}png\\test1.png'
+# Drr_info['rx'] = rx
+filter1 = Drr1.drr(image1, Drr_info)
+save_png(filter1, save_dcm_name, save_png_name)
 
 
 

@@ -20,6 +20,7 @@
       <excludeFolder url="file://$MODULE_DIR$/CUDA_DigitallyReconstructedRadiographs/SiddonClassLib/lib" />
       <excludeFolder url="file://$MODULE_DIR$/GUI/img" />
       <excludeFolder url="file://$MODULE_DIR$/test/Gimg" />
+      <excludeFolder url="file://$MODULE_DIR$/photodraw" />
     </content>
     <orderEntry type="jdk" jdkName="D:\Python\Anaconda3" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />

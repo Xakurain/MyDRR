@@ -13,19 +13,20 @@ p = pyDRRGenerate(dcmfilepath, False)
 p.ReadDCM()
 # dic = {"DRRs":{"moving_image": [], "fixed_image": []}}
 
-rx = -82.5
-ry = 2.6
-rz = -3.3
-tx = -14.6
-ty = -7.5
-tz = 17.4
+rx = -88
+ry = -4
+rz = -3
+tx = -16
+ty = -2
+tz = -10
 sid = 400
 sx = 3
 sy = 3
 dx = 512
 dy = 512
 threshold = 0
-save_dcm_name = f'F:\\code\\python\\iMIA\\MyDRR\\test\\y_true.png'
+save_dcm_name = f'F:\\code\\python\\iMIA\\MyDRR\\test\\y_pred_33254.png'
+
 p.Drr1(save_dcm_name, rx, ry, rz, tx, ty, tz, sid, sx, sy, dx, dy, threshold)
 
 

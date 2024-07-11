@@ -31,13 +31,13 @@ class MyDRRFunction1:
         reader.SetFileNames(files)
         reader.Update()
         image = reader.GetOutput()
-        # imOrigin = image.GetOrigin()
-        # imRes = image.GetSpacing()
-        # imRegion = image.GetBufferedRegion()
-        # imSize = imRegion.GetSize()
-        # print(f"Image Size: {imSize}")
-        # print(f"Resolution: {imRes}")
-        # print(f"origin: {imOrigin}")
+        imOrigin = image.GetOrigin()
+        imRes = image.GetSpacing()
+        imRegion = image.GetBufferedRegion()
+        imSize = imRegion.GetSize()
+        print(f"Image Size: {imSize}")
+        print(f"Resolution: {imRes}")
+        print(f"origin: {imOrigin}")
 
         return image
 
@@ -63,7 +63,7 @@ class MyDRRFunction1:
 
         o2Dx = 0
         o2Dy = 0
-        threshold = 0
+        threshold = 200
 
         FilterType = itk.ResampleImageFilter[self.InputImageType, self.InputImageType]
         filter = FilterType.New()

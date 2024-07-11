@@ -2,14 +2,15 @@ import cv2
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QImage, QPixmap
 import os
-import csv
 import json
 import torch
 from PIL import Image
 from torchvision import transforms
 import numpy as np
 import math
+from modules import contour
 from model_v3 import mobilenet_v3_large
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 
 def showImage(parent, img, mode='path'):
@@ -37,6 +38,87 @@ def showImage(parent, img, mode='path'):
     parent.setScaledContents(True)
     parent.setPixmap(pix_img)
     return [img_rgb.shape[1], img_rgb.shape[0]]
+
+def ImagePross(img_back, img_contour, seg=False, contourType='sobel'):
+    if seg:
+        img_back = contour.otsu_thresholding(img_back)
+        img_contour = contour.otsu_thresholding(img_contour)
+        img_back = contour.map_binary_to_original(img_back)
+        img_contour = contour.map_binary_to_original(img_contour)
+    else:
+        pass
+
+    segmented_image = torch.from_numpy(img_contour).float().to(device)
+    if contourType == 'Sobel':
+        img_contour_G = contour.sobel_edge_detection(segmented_image)
+        img_contour = img_contour_G.cpu().numpy()
+        del img_contour_G, segmented_image
+    elif contourType == 'Prewitt':
+        img_contour_G = contour.prewitt_edge_detection(segmented_image)
+        img_contour = img_contour_G.cpu().numpy()
+        del img_contour_G, segmented_image
+    elif contourType == 'Roberts Cross':
+        img_contour_G = contour.roberts_cross_operator(segmented_image)
+        img_contour = img_contour_G.cpu().numpy()
+        del img_contour_G, segmented_image
+    elif contourType == 'Kirsch':
+        img_contour_G = contour.kirsch_operator(segmented_image)
+        img_contour = img_contour_G.cpu().numpy()
+        del img_contour_G, segmented_image
+    elif contourType == 'Canny':
+        img_contour_G = contour.canny_edge_detection(segmented_image)
+        img_contour = img_contour_G.cpu().numpy()
+        del img_contour_G, segmented_image
+    else:
+        return None
+    # 叠加轮廓
+    img_bgr = cv2.cvtColor(img_back, cv2.COLOR_GRAY2BGR)
+    # 调整维度一致
+    img_bgr = cv2.resize(img_bgr, (img_contour.shape[1], img_contour.shape[0]), interpolation=cv2.INTER_CUBIC)
+    img_bgr[img_contour > 50] = [0, 0, 255]
+    cv2.imwrite('img_rgb3.jpg', img_bgr)
+    img_rgb = cv2.cvtColor(img_bgr, cv2.COLOR_BGR2RGB)
+    return img_rgb
+
+def showImage2(parent, img_true, img_pred, mode='differ', seg=False, contourType=None):
+    img_rgb = None
+    if mode == 'differ':
+        img_true = cv2.imread(img_true)
+        img_true = cv2.cvtColor(img_true, cv2.COLOR_BGR2RGB)
+        img_pred = cv2.imread(img_pred)
+        img_pred = cv2.cvtColor(img_pred, cv2.COLOR_BGR2RGB)
+        img_rgb = img_pred - img_true
+        img_rgb = cv2.normalize(img_rgb, None, 0, 255, cv2.NORM_MINMAX, cv2.CV_8U)
+    elif mode == 'contour1':
+        img_true = cv2.imread(img_true)
+        img_true = cv2.cvtColor(img_true, cv2.COLOR_BGR2GRAY)
+        img_pred = cv2.imread(img_pred)
+        img_pred = cv2.cvtColor(img_pred, cv2.COLOR_BGR2GRAY)
+        img_rgb = ImagePross(img_true, img_pred, seg, contourType)
+        if img_rgb is None:
+            return    
+    elif mode == 'contour2':
+        img_true = cv2.imread(img_true)
+        img_true = cv2.cvtColor(img_true, cv2.COLOR_BGR2GRAY)
+        img_pred = cv2.imread(img_pred)
+        img_pred = cv2.cvtColor(img_pred, cv2.COLOR_BGR2GRAY)
+        img_rgb = ImagePross(img_pred, img_true, seg, contourType)
+        if img_rgb is None:
+            return
+    else:
+        return
+    
+    qt_img = QImage(img_rgb.data,  # 数据源
+                    img_rgb.shape[1],  # 宽度
+                    img_rgb.shape[0],  # 高度
+                    img_rgb.shape[1] * 3, #行字节数
+                    QImage.Format_RGB888)
+
+    pix_img = QPixmap.fromImage(qt_img).scaled(400, 400, aspectMode=Qt.KeepAspectRatio)
+    parent.setScaledContents(True)
+    parent.setPixmap(pix_img)
+    return [img_rgb.shape[1], img_rgb.shape[0]]
+
 
 def predictinit():
     # print('predictinit')
@@ -191,6 +273,4 @@ def Analysis(y_true_path, y_pred_path):
     ncc = NCC(y_true, y_pred)
     nmi = NMI(y_true, y_pred)
     return d, ncc, nmi
-
-
 

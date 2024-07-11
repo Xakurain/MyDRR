@@ -61,8 +61,8 @@ set(CMAKE_COMMAND "D:/Program Files/CMake/bin/cmake.exe") # path
 set(source_file "F:/code/python/iMIA/MyDRR/CUDA_DigitallyReconstructedRadiographs/SiddonClassLib/src/SiddonLib/siddon_class.cu") # path
 set(NVCC_generated_dependency_file "F:/code/python/iMIA/MyDRR/CUDA_DigitallyReconstructedRadiographs/SiddonClassLib/build/CMakeFiles/SiddonGpu.dir/SiddonLib/SiddonGpu_generated_siddon_class.cu.obj.NVCC-depend") # path
 set(cmake_dependency_file "F:/code/python/iMIA/MyDRR/CUDA_DigitallyReconstructedRadiographs/SiddonClassLib/build/CMakeFiles/SiddonGpu.dir/SiddonLib/SiddonGpu_generated_siddon_class.cu.obj.depend") # path
-set(CUDA_make2cmake "D:/Program Files/CMake/share/cmake-3.25/Modules/FindCUDA/make2cmake.cmake") # path
-set(CUDA_parse_cubin "D:/Program Files/CMake/share/cmake-3.25/Modules/FindCUDA/parse_cubin.cmake") # path
+set(CUDA_make2cmake "D:/Program Files/CMake/share/cmake-3.24/Modules/FindCUDA/make2cmake.cmake") # path
+set(CUDA_parse_cubin "D:/Program Files/CMake/share/cmake-3.24/Modules/FindCUDA/parse_cubin.cmake") # path
 set(build_cubin OFF) # bool
 set(CUDA_HOST_COMPILER "$(VCInstallDir)Tools/MSVC/$(VCToolsVersion)/bin/Host$(Platform)/$(PlatformTarget)") # path
 # We won't actually use these variables for now, but we need to set this, in

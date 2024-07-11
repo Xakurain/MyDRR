@@ -18,6 +18,6 @@ def NCC(y_true_path, y_pred_path):
 if __name__ == '__main__':
     # y_true_path = 'F:\\dataset\\imia\\zyt303\drr\\DRRs\\DRRs\\img_0.png'
     # y_pred_path = 'F:\\dataset\\imia\\zyt303\drr\\DRRs\\DRRs\\img_0.png'
-    y_true_path = 'F:\\dataset\\imia\\zyt303\drr\\rx\\rx_-53.png'
-    y_pred_path = 'F:\\dataset\\imia\\zyt303\drr\\rx\\rx_-53.png'
+    y_true_path = 'F:\\dataset\\imia\\zyt303\\DRRs\\new_DRRs\\img_15604.png'
+    y_pred_path = 'F:\\code\\python\\iMIA\\MyDRR\\test\\y_pred1.png'
     print(NCC(y_true_path, y_pred_path))

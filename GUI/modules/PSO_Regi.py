@@ -10,7 +10,7 @@ from DRRGenerate import pyDRRGenerate
 
 
 
-def NMI(y_true, y_pred):
+def Dice(y_true, y_pred):
     row, col = y_true.shape[0], y_true.shape[1]
     s = []
     for r in range(row):
@@ -22,8 +22,8 @@ def NMI(y_true, y_pred):
     m2 = np.linalg.norm(y_pred.flatten()) + np.linalg.norm(y_true.flatten())
     d = (2 * m1 / m2)
     return d
-#粒子群算法
 
+#粒子群算法
 #更新每个粒子的速度向量
 def update_velocity(v_i, p_i, g, x_i, w, c1, c2, v_max):
     """
@@ -63,7 +63,7 @@ def fitness(x, ndim, x_pred, ct, y_true):
         pass
     y_pred = cv2.imread(y_pred_name, 0)
     os.remove(y_pred_name)
-    return NMI(y_true, y_pred)
+    return Dice(y_true, y_pred)
 
 def PSO(ct, x_top1, x_top2, value_top1, value_top2, y_true_path):
     sub_value_index = np.argsort(np.subtract(value_top1, value_top2))
@@ -120,7 +120,7 @@ def PSO(ct, x_top1, x_top2, value_top1, value_top2, y_true_path):
         if epoch >= 1:
             # 判断是否保留上一轮的最优值
             fitness_last = fitness(g, ndim, x_pred, ct, y_true)
-            if fitness_last > g_value:
+            if fitness_last > g_value or math.fabs(g_value-fitness_last) < 0.07:
                 x_pred_new[sub_value_index[epoch-1]] = x_pred[sub_value_index[epoch-1]]
                 g_value = fitness_last
             else:
